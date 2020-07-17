@@ -1,0 +1,33 @@
+# PROBLEM LINK: https://www.codechef.com/JULY20B/problems/CRDGAME/
+
+
+def digit_Sum(n):
+    s = 0
+    while n:
+        s += n % 10
+        n //= 10
+    return s
+T=int(input())
+chef_list=[]
+morty_list=[]
+for test in range(T):
+    N=int(input())
+    for i in range(N):
+        A,B=map(int,input().split())
+        if(digit_Sum(A)>digit_Sum(B)):
+            chef_list.append(1)
+            morty_list.append(0)
+        elif(digit_Sum(A)<digit_Sum(B)):
+            chef_list.append(0)
+            morty_list.append(1)
+        else:
+            chef_list.append(1)
+            morty_list.append(1)
+    if(sum(chef_list)>sum(morty_list)):
+        print(0,sum(chef_list))
+    elif(sum(chef_list)<sum(morty_list)):
+        print(1,sum(morty_list))
+    elif sum(chef_list)==sum(morty_list):
+        print(2,sum(chef_list))
+    chef_list=[]
+    morty_list=[]

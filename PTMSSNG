@@ -1,0 +1,46 @@
+// PROBLEM LINK: https://www.codechef.com/JULY20B/problems/PTMSSNG/
+
+#include<bits/stdc++.h>
+using namespace std;
+# define ll long long int
+int main()
+{
+	#ifndef ONLINE_JUDGE
+    freopen("H:\\input.txt", "r", stdin);
+    freopen("H:\\output.txt", "w", stdout);
+	#endif
+	int T;
+	cin>>T;
+	while(T--)
+	{
+		int N;
+		cin>>N;
+		unordered_set<ll>missing_x,missing_y;
+		for(int i=0;i<4*N-1;i++)
+		{
+			ll x,y;
+			cin>>x>>y;
+			if(missing_x.count(x))
+			{
+				missing_x.erase(x);
+			}
+			else
+			{
+				missing_x.insert(x);
+			}
+			if(missing_y.count(y))
+			{
+				missing_y.erase(y);
+			}
+			else
+			{
+				missing_y.insert(y);
+			}
+		}
+		cout<<(*missing_x.begin())<<" "<<(*missing_y.begin())<<endl;
+	}
+	#ifndef ONLINE_JUDGE
+    cout<<"\nTime Elapsed: " << 1.0*clock() / CLOCKS_PER_SEC << " sec\n";
+	#endif
+	return 0;
+}

@@ -1,0 +1,60 @@
+
+# PROBLEM LINK: https://www.codechef.com/JULY20B/problems/CHFNSWPS/
+
+test_cases=int(input())
+for tests in range(test_cases):
+    n=int(input())
+    freq={}
+    a=list(map(int,input().split()))
+    a.sort()
+    for i in range(n):
+        if a[i] in freq.keys():
+            freq[a[i]]+=1
+        else:
+            freq[a[i]]=1
+    b=list(map(int,input().split()))
+    b.sort()
+    for i in range(n):
+        if b[i] in freq.keys():
+            freq[b[i]]+=1
+        else:
+            freq[b[i]]=1
+    minimum=min(min(a),min(b))
+    position=1
+    c={}
+    for key,value in freq.items():
+        if(value%2!=0):
+            position=0
+            break
+        else:
+            c[key] =value//2
+    if(position==0):
+        print(-1)
+        continue
+    d=c.copy()
+    l1=[]
+    l2=[]
+    for i in range(n):
+        if(d[a[i]]):
+            d[a[i]]-=1
+        else:
+            l1.append(a[i])
+    d=c.copy()
+    for i in range(n):
+        if (d[b[i]]):
+            d[b[i]]-=1
+        else:
+            l2.append(b[i])
+    if(len(l1)==0):
+        print(0)
+        continue
+    if(len(l1)!=len(l2)):
+        print(-1)
+        continue
+    ans=0
+    l1.sort()
+    l2.sort(reverse=True)
+    for i in range(len(l1)):
+        ans+=min(2*minimum,min(l1[i],l2[i]))
+    print(ans)
+    

@@ -1,0 +1,68 @@
+
+// PROBLEM LINK: https://www.codechef.com/JULY20B/problems/DRCHEF/ 
+
+
+#include<bits/stdc++.h>
+using namespace std;
+long long int X;
+int StartingIndex(long long int* A,int N,long long int X)
+{
+    int i=0,store;
+    while(i<N)
+    {
+        if(A[i]>=X)
+       { 
+        break;
+      }
+        else
+        {
+            if(2*A[i]>=X)
+           {
+            X=A[i]; 
+            break;
+          }
+        }
+        i++;
+    }
+    return i;
+}
+int main()
+{
+    #ifndef ONLINE_JUDGE
+    freopen("H:\\input.txt", "r", stdin);
+    freopen("H:\\output.txt", "w", stdout);
+   #endif
+  	int T;
+  	cin>>T;
+  while(T--)
+  {
+    long long int N;
+    cin>>N>>X;
+    long long int no_of_days=0,A[N],temp;
+    for(int i=0;i<N;i++)
+    {
+        cin>>A[i];
+    }
+    sort(A,A+N);
+    int index=StartingIndex(A,N,X);
+    int i=index;
+    while(i<N)
+    {
+      temp=A[i];
+      while(X<temp)
+      {
+        
+       X*=2;
+       no_of_days++;
+      }
+      no_of_days++;
+      X=2*temp;
+      i++;
+    }
+    cout<<no_of_days+index<<endl;
+  }
+	 #ifndef ONLINE_JUDGE
+    cout<<"\nTime Elapsed: " << 1.0*clock() / CLOCKS_PER_SEC << " sec\n";
+  #endif
+  return 0;
+}

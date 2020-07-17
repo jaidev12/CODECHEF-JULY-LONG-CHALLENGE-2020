@@ -1,0 +1,270 @@
+
+// PROBLEM LINK: https://www.codechef.com/JULY20B/problems/DRGNDEN/
+
+#include <bits/stdc++.h>
+using namespace std;
+# define ll long long int
+
+// ALL THE BELOW FUNCTIONS ARE COPIED FROM 
+// https://cp-algorithms.com/data_structures/segment_tree.html
+
+
+void build(ll t[], int a[], int at[], int v, int tl, int tr) 
+{
+  if (tl == tr) 
+  {
+    t[v] = a[at[tl]];
+  } else 
+  {
+    int tm = (tl + tr) / 2;
+    build(t, a, at, v * 2, tl, tm);
+    build(t, a, at, v * 2 + 1, tm + 1, tr);
+    t[v] = t[v * 2] + t[v * 2 + 1];
+  }
+}
+
+void build_height(int t[], int a[], int v, int tl, int tr) 
+{
+  if (tl == tr) 
+  {
+    t[v] = a[tl];
+  } 
+  else 
+  {
+    int tm = (tl + tr) / 2;
+    build_height(t, a, v * 2, tl, tm);
+    build_height(t, a, v * 2 + 1, tm + 1, tr);
+    t[v] = max(t[v * 2], t[v * 2 + 1]);
+  }
+}
+
+void update(ll t[], int v, int tl, int tr, int pos, int new_val) 
+{
+  if (tl == tr) 
+  {
+    t[v] = new_val;
+  } 
+  else 
+  {
+    int tm = (tl + tr) / 2;
+    if (pos <= tm)
+      update(t, v * 2, tl, tm, pos, new_val);
+    else
+      update(t, v * 2 + 1, tm + 1, tr, pos, new_val);
+    t[v] = t[v * 2] + t[v * 2 + 1];
+  }
+}
+
+ll sum_of_range(ll t[], int v, int tl, int tr, int l, int r) 
+{
+  if (l > r)
+    return 0;
+  if (l == tl && r == tr) 
+  {
+    return t[v];
+  }
+  int tm = (tl + tr) / 2;
+  return sum_of_range(t, v * 2, tl, tm, l, min(r, tm)) + sum_of_range(t, v * 2 + 1, tm + 1, tr, max(l, tm + 1), r);
+}
+
+int max_height(int t[], int v, int tl, int tr, int l, int r) 
+{
+  if (l > r)
+    return 0;
+  if (l == tl && r == tr) 
+  {
+    return t[v];
+  }
+  int tm = (tl + tr) / 2;
+  return max(max_height(t, v * 2, tl, tm, l, min(r, tm)), max_height(t, v * 2 + 1, tm + 1, tr, max(l, tm + 1), r));
+}
+
+int main() 
+{
+    ios_base::sync_with_stdio(false);
+    cin.tie(NULL);
+    #ifndef ONLINE_JUDGE
+  	freopen("H:\\input.txt", "r", stdin);
+   	freopen("H:\\output.txt", "w", stdout);
+ 	#endif
+  int n, q, x, l, r;
+  cin >> n >> q;
+  int height[n], taste[n], height_rev[n], taste_rev[n];
+  for(int i=0;i<n;i++)
+  {
+     cin>>height[i];
+    height_rev[n - i - 1] = height[i];
+  }
+  for(int i=0;i<n;i++)
+   {
+    cin>>taste[i];
+    taste_rev[n - i - 1] = taste[i];
+  }
+  int l1[n], l2[n];
+  stack < int > s1, s2;
+  s1.push(n - 1);
+  l2[n - 1] = -1;
+  for(int i=n-2;i>=0;i--) 
+  {
+    while (!s1.empty() && height_rev[s1.top()] <= height_rev[i])
+      s1.pop();
+    if (s1.empty())
+      l2[i] = -1;
+    else
+      l2[i] = s1.top();
+      s1.push(i);
+  }
+  s2.push(n - 1);
+  l1[n - 1] = -1;
+  for(int i=n-2;i>=0;i--) 
+  {
+    while (!s2.empty() && height[s2.top()] <= height[i])
+      s2.pop();
+    if (s2.empty())
+      l1[i] = -1;
+    else
+      l1[i] = s2.top();
+      s2.push(i);
+  }
+
+  int p2[n], p1[n], at1[n], w1[n];
+  int e1[n] = {0}, at2[n], w2[n], e2[n] = {0};
+  set < int > s;
+  for(int i=0;i<n;i++)
+    s.insert(i);
+  x = 0;
+  l = 0;
+  r = 0;
+  while (s.size() != 0) 
+  {
+    if (s.find(r) != s.end()) 
+    {
+      s.erase(r);
+      at1[l] = r;
+      w1[r] = l;
+      e1[x] = l;
+      l++;
+      p1[r] = x;
+      r = l1[r];
+      if (s.size() != 0 && r == -1) 
+      {
+        r = *s.begin();
+        x++;
+      }
+
+    } 
+    else if (s.size() != 0) 
+    {
+      r = * s.begin();
+      x++;
+    }
+
+  }
+
+  for(int i=0;i<n;i++)
+    s.insert(i);
+  x = 0;
+  l = 0;
+  r = 0;
+  while (s.size() != 0) 
+  {
+    if (s.find(r) != s.end()) 
+    {
+      s.erase(r);
+      at2[l] = r;
+      w2[r] = l;
+      e2[x] = l;
+      l++;
+      p2[r] = x;
+      r = l2[r];
+      if (s.size() != 0 && r == -1) 
+      {
+        r = * s.begin();
+        x++;
+      }
+
+    } 
+    else if (s.size() != 0) 
+    {
+      r = * s.begin();
+      x++;
+    }
+
+  }
+
+  ll sum1[4 * n + 4] = {0},sum2[4 * n + 4] = {0};
+  build(sum1, taste, at1, 1, 0, n - 1);
+  build(sum2, taste_rev, at2, 1, 0, n - 1);
+  int tree[4 * n + 4] = {0};
+  build_height(tree, height, 1, 0, n - 1);
+  while (q--) {
+    cin>>x>>l>>r;
+    ll ans = 0;
+    l--;
+    r--;
+    if (x == 1) 
+    {
+      update(sum1, 1, 0, n - 1, w1[l], r + 1);
+      update(sum2, 1, 0, n - 1, w2[n - l - 1], r + 1);
+      taste[l] = r + 1;
+    } 
+    else if (height[l] <= height[r] && l != r)
+        cout<<-1<<endl;
+    else if (l == r)
+      cout<<(taste[l])<<endl;
+    else if (l < r) 
+    {
+      if (max_height(tree, 1, 0, n - 1, l + 1, r) >= height[l])
+        ans = -1;
+      else 
+      {
+        ll temp = 0;
+        r = n - r - 1;
+        l = n - l - 1;
+        while (true) 
+        {
+          if (e2[p2[l]] != e2[p2[r]])
+            temp += sum_of_range(sum2, 1, 0, n - 1, w2[r], e2[p2[r]]);
+          else 
+          {
+            temp += sum_of_range(sum2, 1, 0, n - 1, w2[r], w2[l]);
+            break;
+          }
+          r = l2[at2[e2[p2[r]]]];
+          if (r == -1)
+            break;
+        }
+        ans = temp;
+
+      }
+      cout<<ans<<endl;   
+    } 
+    else 
+    {
+      if (max_height(tree, 1, 0, n - 1, r, l - 1) >= height[l])
+        ans = -1;
+      else 
+      {
+        ll temp = 0;
+        while (true) 
+        {
+          if (e1[p1[l]] != e1[p1[r]])
+            temp += sum_of_range(sum1, 1, 0, n - 1, w1[r], e1[p1[r]]);
+          else {
+            temp += sum_of_range(sum1, 1, 0, n - 1, w1[r], w1[l]);
+            break;
+          }
+          r = l1[at1[e1[p1[r]]]];
+          if (r == -1)
+            break;
+        }
+        ans = temp;
+      }
+       cout<<ans<<endl;   
+    }
+  }
+  #ifndef ONLINE_JUDGE
+  cout << "\nTime Elapsed: " << 1.0 * clock() / CLOCKS_PER_SEC << " sec\n";
+  #endif
+  return 0;
+}

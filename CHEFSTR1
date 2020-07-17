@@ -1,0 +1,12 @@
+# PROBLEM LINK: https://www.codechef.com/JULY20B/problems/CHEFSTR1/
+
+# cook your dish here
+T=int(input())
+for test in range(T):
+    n=int(input())
+    s=list(map(int,input().split()))
+    ans=0
+    for i in range(n-1):
+        ans+=abs(s[i+1]-s[i])-1
+    print(ans)
+    
